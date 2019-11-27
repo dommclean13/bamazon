@@ -54,11 +54,11 @@ function promptUserPurchase() {
 				displayInventory();
 
 			} else {
-				var productData = data[0];
-
+        var productData = data[0];
+        
 				// If the quantity requested by the user is in stock
 				if (quantity <= productData.stock) {
-					console.log('You got it! Placing order...');
+					console.log('Placing order');
 
 					// Construct the updating query string
 					var updateQueryStr = 'UPDATE products SET stock = ' + (productData.stock - quantity) + ' WHERE id = ' + item;
@@ -83,5 +83,46 @@ function promptUserPurchase() {
 		})
 	})
 }
+
+
+// displayInventory will retrieve the current inventory from the database and output it to the console
+function displayInventory() {
+
+	queryStr = 'SELECT * FROM products';
+
+	// Make the db query
+	connection.query(queryStr, function(err, data) {
+		if (err) throw err;
+
+		console.log('Welcome! Here is our Existing Inventory: ');
+		console.log('...................\n');
+
+		var strOut = '';
+		for (var i = 0; i < data.length; i++) {
+			strOut = '';
+			strOut += 'Item ID: ' + data[i].id + ' | ';
+			strOut += 'Product Name: ' + data[i].product_name + ' | ';
+			strOut += 'Department: ' + data[i].dept_name + ' | ';
+			strOut += 'Price: $' + data[i].price + '\n';
+
+			console.log(strOut);
+		}
+
+	  	console.log("---------------------------------------------------------------------\n");
+
+	  	//Prompt the user for item/quantity they would like to purchase
+	  	promptUserPurchase();
+	})
+}
+
+// runBamazon will execute the main application logic
+function runBamazon() {
+
+	displayInventory();
+}
+
+// Run the application logic
+runBamazon();
+
 
 
